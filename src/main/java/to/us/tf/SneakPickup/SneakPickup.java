@@ -1,4 +1,4 @@
-package to.us.tf;
+package to.us.tf.SneakPickup;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -31,15 +31,15 @@ public class SneakPickup extends JavaPlugin implements Listener
     Set<String> autoPickupBlocks = new HashSet<>();
     String reminderMessage = ChatColor.GOLD + "Hold sneak to pickup items";
     String noPermissionMessage = ChatColor.RED + "You do not have the sneakpickup.toggle permission";
-    String enableMessage = "to.us.tf.SneakPickup has been enabled";
-    String disableMessage = "to.us.tf.SneakPickup has been disabled";
+    String enableMessage = "SneakPickup has been enabled";
+    String disableMessage = "SneakPickup has been disabled";
     public void onEnable()
     {
         getServer().getPluginManager().registerEvents(this, this);
         config.addDefault("reminderMessage", "&6Hold sneak to pickup items");
         config.addDefault("noPermissionMessage", "&cYou do not have the sneakpickup.toggle permission");
-        config.addDefault("enableMessage", "to.us.tf.SneakPickup has been &aenabled");
-        config.addDefault("disableMessage", "to.us.tf.SneakPickup has been &cdisabled");
+        config.addDefault("enableMessage", "SneakPickup has been &aenabled");
+        config.addDefault("disableMessage", "SneakPickup has been &cdisabled");
         config.addDefault("disabledWorlds", new ArrayList<>(Arrays.asList("prison", "creative")));
         config.addDefault("blocksToAlwaysPickup", new ArrayList<>(Arrays.asList("DIAMOND", "IRON_INGOT", "GOLD_INGOT", "COAL")));
         config.options().copyDefaults(true);
@@ -129,7 +129,7 @@ public class SneakPickup extends JavaPlugin implements Listener
         if (player == null)
             return null;
 
-        //to.us.tf.SneakPickup is disabled if there is an entry in storage.yml
+        //SneakPickup is disabled if there is an entry in storage.yml
         if (storage.get(player.getUniqueId().toString()) != null)
         {
             //Enable
@@ -154,7 +154,7 @@ public class SneakPickup extends JavaPlugin implements Listener
         if (disabledWorlds.contains(player.getWorld()) || autoPickupBlocks.contains(event.getItem().getItemStack().getType().toString()))
             return;
 
-        //Ignore players who have disabled to.us.tf.SneakPickup
+        //Ignore players who have disabled SneakPickup
         if (config.get(player.getUniqueId().toString()) != null)
             return;
 
