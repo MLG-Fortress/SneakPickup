@@ -5,3 +5,14 @@ main: to.us.tf.SneakPickup.SneakPickup
 commands:
   sneakpickup:
     aliases: [autopickup,pickup]
+permissions:
+  sneakpickup.*:
+    children:
+      sneakpickup.toggle: true
+      sneakpickup.toggleothers: true
+  sneakpickup.toggle:
+    description: Permission to toggle /sneakpickup for yourself
+    default: true
+  sneakpickup.toggleothers:
+    description: Permission to toggle /sneakpickup for other players
+    default: op
