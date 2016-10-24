@@ -155,7 +155,7 @@ public class SneakPickup extends JavaPlugin implements Listener
             return;
 
         //Ignore players who have disabled SneakPickup
-        if (config.get(player.getUniqueId().toString()) != null)
+        if (storage.get(player.getUniqueId().toString()) != null)
             return;
 
         if (!remindedThisSession.contains(event.getPlayer()))
