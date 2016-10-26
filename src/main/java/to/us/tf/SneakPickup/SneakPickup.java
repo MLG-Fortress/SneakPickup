@@ -144,7 +144,7 @@ public class SneakPickup extends JavaPlugin implements Listener
         }
     }
 
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
     void onPlayerAttemptToPickupItem(PlayerPickupItemEvent event)
     {
         Player player = event.getPlayer();
