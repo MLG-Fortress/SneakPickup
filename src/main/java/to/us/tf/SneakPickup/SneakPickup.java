@@ -81,11 +81,11 @@ public class SneakPickup extends JavaPlugin implements Listener
     public void onDisable()
     {
         File storageFile = new File(getDataFolder(), "storage.data");
-        if (config != null)
+        if (storage != null)
         {
             try
             {
-                config.save(storageFile);
+                storage.save(storageFile);
             }
             catch (IOException e) //really
             {
@@ -167,11 +167,8 @@ public class SneakPickup extends JavaPlugin implements Listener
         {
             if (!player.hasPlayedBefore())
                 player.sendMessage(reminderMessage);
-            else
-            {
-                event.getItem().setCustomName(reminderMessage);
-                event.getItem().setCustomNameVisible(true);
-            }
+            event.getItem().setCustomName(reminderMessage);
+            event.getItem().setCustomNameVisible(true);
             remindedThisSession.add(player);
         }
         if (!player.isSneaking())
