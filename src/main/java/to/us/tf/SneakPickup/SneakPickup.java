@@ -165,6 +165,9 @@ public class SneakPickup extends JavaPlugin implements Listener
 
         if (!remindedThisSession.contains(event.getPlayer()))
         {
+            //If this item has a custom name already, don't remind this player.
+            if (event.getItem().getCustomName() != null && !event.getItem().getCustomName().isEmpty())
+                return;
             if (!player.hasPlayedBefore())
                 player.sendMessage(reminderMessage);
             event.getItem().setCustomName(reminderMessage);
