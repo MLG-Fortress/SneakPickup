@@ -37,7 +37,7 @@ public class SneakPickup extends JavaPlugin implements Listener
     public void onEnable()
     {
         getServer().getPluginManager().registerEvents(this, this);
-        config.addDefault("reminderMessage", "&6Hold sneak to pickup items");
+        config.addDefault("reminderMessage", "&6Hold sneak to pickup");
         config.addDefault("noPermissionMessage", "&cYou do not have the sneakpickup.toggle permission");
         config.addDefault("enableMessage", "SneakPickup has been &aenabled");
         config.addDefault("disableMessage", "SneakPickup has been &cdisabled");
