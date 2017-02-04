@@ -14,7 +14,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerPickupArrowEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.PlayerToggleSneakEvent;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.File;
 import java.io.IOException;
@@ -34,6 +36,7 @@ public class SneakPickup extends JavaPlugin implements Listener
     String noPermissionMessage = ChatColor.RED + "You do not have the sneakpickup.toggle permission";
     String enableMessage = "SneakPickup has been enabled";
     String disableMessage = "SneakPickup has been disabled";
+    String inventoryFull = ChatColor.RED + "Your inventory is full!";
     public void onEnable()
     {
         getServer().getPluginManager().registerEvents(this, this);
@@ -41,6 +44,7 @@ public class SneakPickup extends JavaPlugin implements Listener
         config.addDefault("noPermissionMessage", "&cYou do not have the sneakpickup.toggle permission");
         config.addDefault("enableMessage", "SneakPickup has been &aenabled");
         config.addDefault("disableMessage", "SneakPickup has been &cdisabled");
+        config.addDefault("inventoryFull", "&cYour inventory is full!");
         config.addDefault("disabledWorlds", new ArrayList<>(Arrays.asList("prison", "creative")));
         config.addDefault("blocksToAlwaysPickup", new ArrayList<>(Arrays.asList("DIAMOND", "IRON_INGOT", "GOLD_INGOT", "COAL")));
         config.options().copyDefaults(true);
@@ -56,6 +60,7 @@ public class SneakPickup extends JavaPlugin implements Listener
         noPermissionMessage = ChatColor.translateAlternateColorCodes('&', config.getString("noPermissionMessage"));
         enableMessage = ChatColor.translateAlternateColorCodes('&', config.getString("enableMessage"));
         disableMessage = ChatColor.translateAlternateColorCodes('&', config.getString("disableMessage"));
+        inventoryFull = ChatColor.translateAlternateColorCodes('&', config.getString("inventoryFull"));
 
         //I use .data extension cuz reasons that have to do with how I automatically manage .yml files on my server so yea...
         //Not like they're supposed to touch this file anyways.
@@ -176,11 +181,43 @@ public class SneakPickup extends JavaPlugin implements Listener
         }
         if (!player.isSneaking())
             event.setCancelled(true);
+        new BukkitRunnable()
+        {
+            public void run()
+            {
+                if (!hasSpace(player))
+                    player.sendActionBar(inventoryFull);
+            }
+        }.runTaskLater(this, 1L);
     }
 
     @EventHandler
     void onPlayerQuitRemoveFromRemindedSet(PlayerQuitEvent event)
     {
         remindedThisSession.remove(event.getPlayer());
+    }
+
+    @EventHandler
+    void onPlayerInventoryFull(PlayerToggleSneakEvent event)
+    {
+        Player player = event.getPlayer();
+        new BukkitRunnable()
+        {
+            public void run()
+            {
+                if (player.isSneaking() && !hasSpace(player))
+                    player.sendActionBar(inventoryFull);
+            }
+        }.runTaskLater(this, 15L);
+    }
+
+    /**
+     * Checks if player has a slot open in inventory
+     * @param player
+     * @return true if a slot is available
+     */
+    boolean hasSpace(Player player)
+    {
+        return player.getInventory().firstEmpty() != -1;
     }
 }

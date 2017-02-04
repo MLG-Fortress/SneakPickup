@@ -1,5 +1,5 @@
 name: SneakPickup
-version: 1.0
+version: ${project.version}
 author: RoboMWM
 main: to.us.tf.SneakPickup.SneakPickup
 loadbefore: [mcMMO]
