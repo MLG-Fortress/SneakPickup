@@ -212,7 +212,7 @@ public class SneakPickup extends JavaPlugin implements Listener
                 if (player.isSneaking() && !hasSpace(player))
                     player.sendActionBar(inventoryFull);
             }
-        }.runTaskLater(this, 15L);
+        }.runTaskLater(this, 10L);
     }
 
     /**
