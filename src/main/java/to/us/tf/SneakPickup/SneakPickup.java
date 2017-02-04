@@ -181,14 +181,18 @@ public class SneakPickup extends JavaPlugin implements Listener
         }
         if (!player.isSneaking())
             event.setCancelled(true);
-        new BukkitRunnable()
+        else
         {
-            public void run()
+            //Check and notify player if their inventory is full after picking up item
+            new BukkitRunnable()
             {
-                if (!hasSpace(player))
-                    player.sendActionBar(inventoryFull);
-            }
-        }.runTaskLater(this, 1L);
+                public void run()
+                {
+                    if (!hasSpace(player))
+                        player.sendActionBar(inventoryFull);
+                }
+            }.runTaskLater(this, 1L);
+        }
     }
 
     @EventHandler
