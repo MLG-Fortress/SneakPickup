@@ -46,7 +46,7 @@ public class SneakPickup extends JavaPlugin implements Listener
         config.addDefault("disableMessage", "SneakPickup has been &cdisabled");
         config.addDefault("inventoryFull", "&cYour inventory is full!");
         config.addDefault("disabledWorlds", new ArrayList<>(Arrays.asList("prison", "creative")));
-        config.addDefault("blocksToAlwaysPickup", new ArrayList<>(Arrays.asList("DIAMOND", "IRON_INGOT", "GOLD_INGOT", "COAL")));
+        config.addDefault("blocksToAlwaysPickup", new ArrayList<>(Arrays.asList("DIAMOND_ORE", "IRON_ORE", "GOLD_ORE", "COAL", "DIAMOND")));
         config.options().copyDefaults(true);
         saveConfig();
         for (String worldString : config.getStringList("disabledWorlds"))
