@@ -12,6 +12,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerAttemptPickupItemEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerPickupArrowEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -38,6 +39,7 @@ public class SneakPickup extends JavaPlugin implements Listener
     String enableMessage = "SneakPickup has been enabled";
     String disableMessage = "SneakPickup has been disabled";
     String inventoryFull = ChatColor.RED + "Your inventory is full!";
+    String toggleMessage = "Use /sneakpickup to toggle.";
     public void onEnable()
     {
         getServer().getPluginManager().registerEvents(this, this);
@@ -149,6 +151,16 @@ public class SneakPickup extends JavaPlugin implements Listener
             storage.set(player.getUniqueId().toString(), true);
             return disableMessage;
         }
+    }
+
+    //Remind players with disabled sneakpickup
+    @EventHandler
+    void onPlayerJoin(PlayerJoinEvent event)
+    {
+        Player player = event.getPlayer();
+        if (storage.get(player.getUniqueId().toString()) == null)
+            return;
+        player.sendMessage(disableMessage + ". " + toggleMessage);
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
