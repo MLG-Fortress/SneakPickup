@@ -11,6 +11,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerAttemptPickupItemEvent;
 import org.bukkit.event.player.PlayerPickupArrowEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -170,9 +171,10 @@ public class SneakPickup extends JavaPlugin implements Listener
 
         if (!remindedThisSession.contains(event.getPlayer()))
         {
-            //If this item has a custom name already, don't remind this player.
+            //If this item has a custom name already, don't change it.
             if (event.getItem().getCustomName() != null && !event.getItem().getCustomName().isEmpty())
                 return;
+            //Also send a message in chat to players who haven't played before
             if (!player.hasPlayedBefore())
                 player.sendMessage(reminderMessage);
             event.getItem().setCustomName(reminderMessage);
@@ -181,18 +183,6 @@ public class SneakPickup extends JavaPlugin implements Listener
         }
         if (!player.isSneaking())
             event.setCancelled(true);
-        else
-        {
-            //Check and notify player if their inventory is full after picking up item
-            new BukkitRunnable()
-            {
-                public void run()
-                {
-                    if (!hasSpace(player))
-                        player.sendActionBar(inventoryFull);
-                }
-            }.runTaskLater(this, 1L);
-        }
     }
 
     @EventHandler
@@ -202,17 +192,12 @@ public class SneakPickup extends JavaPlugin implements Listener
     }
 
     @EventHandler
-    void onPlayerInventoryFull(PlayerToggleSneakEvent event)
+    void onPlayerInventoryFullYetStillTryingToPickup(PlayerAttemptPickupItemEvent event)
     {
         Player player = event.getPlayer();
-        new BukkitRunnable()
-        {
-            public void run()
-            {
-                if (player.isSneaking() && !hasSpace(player))
-                    player.sendActionBar(inventoryFull);
-            }
-        }.runTaskLater(this, 10L);
+
+        if (player.isSneaking() && !hasSpace(player))
+            player.sendActionBar(inventoryFull);
     }
 
     /**
