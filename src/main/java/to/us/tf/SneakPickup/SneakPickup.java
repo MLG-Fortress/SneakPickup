@@ -1,6 +1,5 @@
 package to.us.tf.SneakPickup;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.command.Command;
@@ -12,17 +11,17 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerAttemptPickupItemEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerPickupArrowEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.event.player.PlayerToggleSneakEvent;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Created by RoboMWM on 10/21/2016.
@@ -138,30 +137,30 @@ public class SneakPickup extends JavaPlugin implements Listener
         if (player == null)
             return null;
 
-        //SneakPickup is disabled if there is an entry in storage.yml
+        //SneakPickup is enabled if there is an entry in storage.yml
         if (storage.get(player.getUniqueId().toString()) != null)
         {
-            //Enable
+            //Disable
             storage.set(player.getUniqueId().toString(), null);
-            return enableMessage;
+            return disableMessage;
         }
         else
         {
-            //Disable
+            //Enable
             storage.set(player.getUniqueId().toString(), true);
-            return disableMessage;
+            return enableMessage;
         }
     }
 
-    //Remind players with disabled sneakpickup
-    @EventHandler
-    void onPlayerJoin(PlayerJoinEvent event)
-    {
-        Player player = event.getPlayer();
-        if (storage.get(player.getUniqueId().toString()) == null)
-            return;
-        player.sendMessage(disableMessage + ". " + toggleMessage);
-    }
+    //Remind players with enabled sneakpickup
+//    @EventHandler
+//    void onPlayerJoin(PlayerJoinEvent event)
+//    {
+//        Player player = event.getPlayer();
+//        if (storage.get(player.getUniqueId().toString()) == null)
+//            return;
+//        player.sendMessage(disableMessage + ". " + toggleMessage);
+//    }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
     void onPlayerAttemptToPickupItem(PlayerPickupItemEvent event)
@@ -169,12 +168,15 @@ public class SneakPickup extends JavaPlugin implements Listener
         Player player = event.getPlayer();
 
         //Ignore disabled worlds
-        //Ignore blocks we should always "auto pickup"
-        if (disabledWorlds.contains(player.getWorld()) || autoPickupBlocks.contains(event.getItem().getItemStack().getType().toString()))
+        if (disabledWorlds.contains(player.getWorld()))
             return;
 
-        //Ignore players who have disabled SneakPickup
-        if (storage.get(player.getUniqueId().toString()) != null)
+        //Ignore players who haven't enabled SneakPickup
+        if (storage.get(player.getUniqueId().toString()) == null)
+            return;
+
+        //Ignore blocks we should always "auto pickup"
+        if (autoPickupBlocks.contains(event.getItem().getItemStack().getType().toString()))
             return;
 
         //Ignore arrow pickups
@@ -187,8 +189,8 @@ public class SneakPickup extends JavaPlugin implements Listener
             if (event.getItem().getCustomName() != null && !event.getItem().getCustomName().isEmpty())
                 return;
             //Also send a message in chat to players who haven't played before
-            if (!player.hasPlayedBefore())
-                player.sendMessage(reminderMessage);
+//            if (!player.hasPlayedBefore())
+//                player.sendMessage(reminderMessage);
             event.getItem().setCustomName(reminderMessage);
             event.getItem().setCustomNameVisible(true);
             remindedThisSession.add(player);
