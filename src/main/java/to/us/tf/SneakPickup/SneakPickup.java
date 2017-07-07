@@ -76,7 +76,7 @@ public class SneakPickup extends JavaPlugin implements Listener
             }
             catch (IOException e)
             {
-                this.getLogger().severe("Could not create storage.yml! Since I'm lazy, there currently is no \"in memory\" option. Will now disable along with a nice stack trace for you to bother me with:");
+                this.getLogger().severe("Could not create storage.data! Since I'm lazy, there currently is no \"in memory\" option. Will now disable along with a nice stack trace for you to bother me with:");
                 e.printStackTrace();
                 getServer().getPluginManager().disablePlugin(this);
             }
