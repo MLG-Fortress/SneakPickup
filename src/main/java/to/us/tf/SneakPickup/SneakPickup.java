@@ -11,9 +11,11 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerAttemptPickupItemEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerPickupArrowEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
@@ -142,12 +144,14 @@ public class SneakPickup extends JavaPlugin implements Listener
         {
             //Disable
             storage.set(player.getUniqueId().toString(), null);
+            player.removeMetadata("SNEAKPICKUP", this);
             return disableMessage;
         }
         else
         {
             //Enable
             storage.set(player.getUniqueId().toString(), true);
+            player.setMetadata("SNEAKPICKUP", new FixedMetadataValue(this, true));
             return enableMessage;
         }
     }
@@ -161,6 +165,15 @@ public class SneakPickup extends JavaPlugin implements Listener
 //            return;
 //        player.sendMessage(disableMessage + ". " + toggleMessage);
 //    }
+
+    @EventHandler
+    private void onPlayerJoin(PlayerJoinEvent event)
+    {
+        Player player = event.getPlayer();
+        if (storage.get(player.getUniqueId().toString()) == null)
+            return;
+        player.setMetadata("SNEAKPICKUP", new FixedMetadataValue(this, true));
+    }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
     void onPlayerAttemptToPickupItem(PlayerPickupItemEvent event)
@@ -203,6 +216,7 @@ public class SneakPickup extends JavaPlugin implements Listener
     void onPlayerQuitRemoveFromRemindedSet(PlayerQuitEvent event)
     {
         remindedThisSession.remove(event.getPlayer());
+        event.getPlayer().removeMetadata("SNEAKPICKUP", this);
     }
 
     @EventHandler
